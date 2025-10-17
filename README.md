@@ -1,7 +1,3 @@
-Ecco una versione riformulata del tuo testo come README pronto per GitHub, con uno stile chiaro, leggibile e strutturato in Markdown:
-
----
-
 # Multidimensional Multiple Knapsack Problem (MMKP)
 
 This repository provides a **Simulated Annealing (SA)** implementation to solve the **Multidimensional Multiple Knapsack Problem (MMKP)**.
