@@ -1,4 +1,7 @@
 import numpy as np
+import random
+from copy import deepcopy
+from tqdm.auto import tqdm
 
 # Problem 3:
 rng = np.random.default_rng(seed=42)
@@ -11,9 +14,7 @@ CONSTRAINTS = rng.integers(
     1000 * 10, 1000 * 2 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
 )
 
-import random
-from copy import deepcopy
-from tqdm.auto import tqdm
+
 
 # Probability for each tweak operation
 P_REMOVE = 0.3
