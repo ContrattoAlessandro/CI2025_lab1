@@ -1,4 +1,7 @@
 import numpy as np
+import random
+from copy import deepcopy
+from tqdm.auto import tqdm
 
 rng = np.random.default_rng(seed=42)
 NUM_KNAPSACKS = 10
@@ -10,9 +13,6 @@ CONSTRAINTS = rng.integers(
     1000 * 2, 1000 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
 )
 
-import random
-from copy import deepcopy
-from tqdm.auto import tqdm
 
 # Evaluation function
 def evaluate(solution):
