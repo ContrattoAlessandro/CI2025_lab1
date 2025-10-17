@@ -81,7 +81,7 @@ def tweak(solution, strength=0.1):
 
 
 # Generate an initial feasible solution
-def build_feasible_solution()():
+def build_feasible_solution():
     solution = [-1] * NUM_ITEMS
     loads = np.zeros((NUM_KNAPSACKS, NUM_DIMENSIONS), dtype=int)
     
@@ -108,7 +108,7 @@ def build_feasible_solution()():
 
 
 print("Generating initial feasible solution...")
-current_solution = build_feasible_solution()()
+current_solution = build_feasible_solution()
 
 initial_value = evaluate(current_solution)
 print(f"Initial solution: Value = {initial_value}")
