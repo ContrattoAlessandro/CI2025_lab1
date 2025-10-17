@@ -116,3 +116,27 @@ if valid_solution is not None:
 
 else:
     print("\nNo feasible solution found.")
+
+#Theoretical maximum total value: 1065
+
+#100%
+# 100000/100000 [00:09<00:00, 10783.34it/s]
+#[Step 17] New feasible solution found! Value = 744, Fitness = 744, Ratio = 69.86% of max
+#[Step 18] New feasible solution found! Value = 813, Fitness = 813, Ratio = 76.34% of max
+#[Step 36] New feasible solution found! Value = 874, Fitness = 874, Ratio = 82.07% of max
+#[Step 46] New feasible solution found! Value = 882, Fitness = 882, Ratio = 82.82% of max
+#[Step 52] New feasible solution found! Value = 924, Fitness = 924, Ratio = 86.76% of max
+#[Step 76] New feasible solution found! Value = 956, Fitness = 956, Ratio = 89.77% of max
+#[Step 210] New feasible solution found! Value = 990, Fitness = 990, Ratio = 92.96% of max
+#[Step 234] New feasible solution found! Value = 993, Fitness = 993, Ratio = 93.24% of max
+#[Step 455] New feasible solution found! Value = 1020, Fitness = 1020, Ratio = 95.77% of max
+#[Step 615] New feasible solution found! Value = 1045, Fitness = 1045, Ratio = 98.12% of max
+#[Step 616] New feasible solution found! Value = 1057, Fitness = 1057, Ratio = 99.25% of max
+#[Step 5200] New feasible solution found! Value = 1065, Fitness = 1065, Ratio = 100.00% of max
+
+#Best feasible solution found:
+#Value = 1065, Penalty = 0, Fitness = 1065
+#Ratio = 100.00% of theoretical maximum value
+
+#Solution array form:
+#[0 0 2 2 0 1 1 2 0 1 1 0 1 0 1 0 0 2 0 1]
