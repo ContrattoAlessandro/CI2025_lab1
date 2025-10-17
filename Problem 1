@@ -1,0 +1,118 @@
+import numpy as np
+
+# Problem 1:
+rng = np.random.default_rng(seed=42)
+NUM_KNAPSACKS = 3
+NUM_ITEMS = 20
+NUM_DIMENSIONS = 2
+VALUES = rng.integers(0, 100, size=NUM_ITEMS)
+WEIGHTS = rng.integers(0, 100, size=(NUM_ITEMS, NUM_DIMENSIONS))
+CONSTRAINTS = rng.integers(
+    0, 100 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
+)
+
+import numpy as np
+import random
+from copy import deepcopy
+from tqdm.auto import tqdm
+
+# Evaluation function
+def evaluate(solution):
+    total_value = 0
+    used_capacity = np.zeros((NUM_KNAPSACKS, NUM_DIMENSIONS), dtype=int)
+
+    for item in range(len(solution)):
+        sack = solution[item]
+        if sack == -1:
+            continue
+        total_value += VALUES[item]
+        used_capacity[sack] += WEIGHTS[item]
+
+    # Penalty if constraints are violated
+    penalty = 0
+    for k in range(NUM_KNAPSACKS):
+        for d in range(NUM_DIMENSIONS):
+            if used_capacity[k, d] > CONSTRAINTS[k, d]:
+                penalty += (used_capacity[k, d] - CONSTRAINTS[k, d])
+
+    fitness = total_value - 10 * penalty
+    return total_value, penalty, fitness
+
+
+# Tweak function
+def tweak(solution, strength=0.1):
+    new_sol = deepcopy(solution)
+    again = True
+    while again:
+        item = random.randint(0, NUM_ITEMS - 1)
+        new_sol[item] = random.choice(list(range(NUM_KNAPSACKS)) + [-1])
+        again = random.random() < strength
+    return new_sol
+
+
+# Simulated Annealing
+
+# Generate random initial solution
+current_solution = []
+for _ in range(NUM_ITEMS):
+    possible_choices = list(range(NUM_KNAPSACKS)) + [-1]
+    chosen_sack = random.choice(possible_choices)
+    current_solution.append(chosen_sack)
+
+_, _, current_fitness = evaluate(current_solution)
+
+MAX_STEPS = 100000
+temp = 80.0
+
+valid_solution = None
+best_valid_value = 0
+best_valid_fitness = 0
+
+# Theoretical maximum total value of the instance of the problem
+max_value = np.sum(VALUES)
+print(f"Theoretical maximum total value: {max_value}\n")
+
+for step in tqdm(range(MAX_STEPS)):
+    val, pen, fit = evaluate(current_solution)
+
+    if pen == 0 and fit > best_valid_fitness:
+        valid_solution = deepcopy(current_solution)
+        best_valid_value = val
+        best_valid_fitness = fit
+        ratio = (best_valid_value / max_value) * 100
+        print(f"[Step {step}] New feasible solution found! "
+              f"Value = {val}, Fitness = {fit}, Ratio = {ratio:.2f}% of max")
+
+    # Cooling temperature
+    if step % 200 == 0:
+        temp *= 0.99
+
+    # Generate new candidate solution
+    new_solution = tweak(current_solution, strength=0.1)
+    _, _, new_fitness = evaluate(new_solution)
+
+    # Accept or reject new solution
+    if new_fitness >= current_fitness:
+        current_solution = new_solution
+        current_fitness = new_fitness
+    else:
+        diff = current_fitness - new_fitness
+        p = np.exp(-diff / temp)
+        if random.random() < p:
+            current_solution = new_solution
+            current_fitness = new_fitness
+
+
+# Output
+if valid_solution is not None:
+    val_b, pen_b, fit_b = evaluate(valid_solution)
+    ratio_b = (val_b / max_value) * 100
+    print(f"\nBest feasible solution found:")
+    print(f"Value = {val_b}, Penalty = {pen_b}, Fitness = {fit_b}")
+    print(f"Ratio = {ratio_b:.2f}% of theoretical maximum value")
+
+    print("\nSolution array form:")
+    print(np.array(valid_solution))
+
+else:
+    print("\nNo feasible solution found.")
