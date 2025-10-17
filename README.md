@@ -18,7 +18,7 @@ The MMKP is defined as follows:
 
 ## Simulated Annealing Approach
 
-The algorithm uses a **Simulated Annealing (SA)** metaheuristic:
+To solve the first two problems i used a **Simulated Annealing (SA)** metaheuristic:
 
 * Inspired by the **physical process of annealing**, where a material is heated and slowly cooled.
 * Gradually explores the solution space, **occasionally accepting worse solutions** to escape local optima.
