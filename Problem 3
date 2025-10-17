@@ -15,7 +15,6 @@ CONSTRAINTS = rng.integers(
 )
 
 
-
 # Probability for each tweak operation
 P_REMOVE = 0.3
 P_ADD = 0.3
