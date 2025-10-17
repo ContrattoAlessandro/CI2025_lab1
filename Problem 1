@@ -1,4 +1,7 @@
 import numpy as np
+import random
+from copy import deepcopy
+from tqdm.auto import tqdm
 
 # Problem 1:
 rng = np.random.default_rng(seed=42)
@@ -11,10 +14,6 @@ CONSTRAINTS = rng.integers(
     0, 100 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
 )
 
-import numpy as np
-import random
-from copy import deepcopy
-from tqdm.auto import tqdm
 
 # Evaluation function
 def evaluate(solution):
