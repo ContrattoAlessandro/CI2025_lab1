@@ -10,7 +10,6 @@ CONSTRAINTS = rng.integers(
     1000 * 2, 1000 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
 )
 
-import numpy as np
 import random
 from copy import deepcopy
 from tqdm.auto import tqdm
