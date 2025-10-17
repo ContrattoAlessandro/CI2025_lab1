@@ -15,3 +15,5 @@ The MMKP is defined as follows:
 ---
 
 To solve the first two problems i used a **Simulated Annealing** metaheuristic, while to solve the last one i used a simpler **Hill Climbing** approach.
+
+I had problem to upload the jupyter notebook for compatibility reason, it's why i uploaded separated files
