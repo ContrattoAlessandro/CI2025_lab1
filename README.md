@@ -1,7 +1,5 @@
 # Multidimensional Multiple Knapsack Problem (MMKP)
 
-This repository provides a **Simulated Annealing (SA)** implementation to solve the **Multidimensional Multiple Knapsack Problem (MMKP)**.
-
 ## Problem Description
 
 The MMKP is defined as follows:
