@@ -1,0 +1,155 @@
+import numpy as np
+
+rng = np.random.default_rng(seed=42)
+NUM_KNAPSACKS = 10
+NUM_ITEMS = 100
+NUM_DIMENSIONS = 10
+VALUES = rng.integers(0, 1000, size=NUM_ITEMS)
+WEIGHTS = rng.integers(0, 1000, size=(NUM_ITEMS, NUM_DIMENSIONS))
+CONSTRAINTS = rng.integers(
+    1000 * 2, 1000 * NUM_ITEMS // NUM_KNAPSACKS, size=(NUM_KNAPSACKS, NUM_DIMENSIONS)
+)
+
+import numpy as np
+import random
+from copy import deepcopy
+from tqdm.auto import tqdm
+
+# Evaluation function
+def evaluate(solution):
+    total_value = 0
+    used_capacity = np.zeros((NUM_KNAPSACKS, NUM_DIMENSIONS), dtype=int)
+
+    for item in range(len(solution)):
+        sack = solution[item]
+        if sack == -1:
+            continue
+        total_value += VALUES[item]
+        used_capacity[sack] += WEIGHTS[item]
+
+    # Penalty if constraints are violated
+    penalty = 0
+    for k in range(NUM_KNAPSACKS):
+        for d in range(NUM_DIMENSIONS):
+            if used_capacity[k, d] > CONSTRAINTS[k, d]:
+                penalty += (used_capacity[k, d] - CONSTRAINTS[k, d])
+
+    fitness = total_value - 10 * penalty
+    return total_value, penalty, fitness
+
+
+# Tweak function
+def tweak(solution, strength=0.1):
+    new_sol = deepcopy(solution)
+    again = True
+    while again:
+        item = random.randint(0, NUM_ITEMS - 1)
+        new_sol[item] = random.choice(list(range(NUM_KNAPSACKS)) + [-1])
+        again = random.random() < strength
+    return new_sol
+
+
+# Simulated Annealing
+
+# Generate random initial solution
+current_solution = []
+for _ in range(NUM_ITEMS):
+    possible_choices = list(range(NUM_KNAPSACKS)) + [-1]
+    chosen_sack = random.choice(possible_choices)
+    current_solution.append(chosen_sack)
+
+_, _, current_fitness = evaluate(current_solution)
+
+MAX_STEPS = 100000
+temp = 80.0
+
+valid_solution = None
+best_valid_value = 0
+best_valid_fitness = 0
+
+# Theoretical maximum total value of the instance of the problem
+max_value = np.sum(VALUES)
+print(f"Theoretical maximum total value: {max_value}\n")
+
+for step in tqdm(range(MAX_STEPS)):
+    val, pen, fit = evaluate(current_solution)
+
+    if pen == 0 and fit > best_valid_fitness:
+        valid_solution = deepcopy(current_solution)
+        best_valid_value = val
+        best_valid_fitness = fit
+        ratio = (best_valid_value / max_value) * 100
+        print(f"[Step {step}] New feasible solution found! "
+              f"Value = {val}, Fitness = {fit}, Ratio = {ratio:.2f}% of max")
+
+    # Cooling temperature
+    if step % 200 == 0:
+        temp *= 0.9995
+
+    # Generate new candidate solution
+    new_solution = tweak(current_solution, strength=0.1)
+    _, _, new_fitness = evaluate(new_solution)
+
+    # Accept or reject new solution
+    if new_fitness >= current_fitness:
+        current_solution = new_solution
+        current_fitness = new_fitness
+    else:
+        diff = current_fitness - new_fitness
+        p = np.exp(-diff / temp)
+        if random.random() < p:
+            current_solution = new_solution
+            current_fitness = new_fitness
+
+
+# Output
+if valid_solution is not None:
+    val_b, pen_b, fit_b = evaluate(valid_solution)
+    ratio_b = (val_b / max_value) * 100
+    print(f"\nBest feasible solution found:")
+    print(f"Value = {val_b}, Penalty = {pen_b}, Fitness = {fit_b}")
+    print(f"Ratio = {ratio_b:.2f}% of theoretical maximum value")
+
+    print("\nSolution array form:")
+    print(np.array(valid_solution))
+
+else:
+    print("\nNo feasible solution found.")
+
+
+#Theoretical maximum total value: 52620
+
+#100%
+# 100000/100000 [00:41<00:00, 2706.95it/s]
+#[Step 1671] New feasible solution found! Value = 39290, Fitness = 39290, Ratio = 74.67% of max
+#[Step 1686] New feasible solution found! Value = 39653, Fitness = 39653, Ratio = 75.36% of max
+#[Step 3191] New feasible solution found! Value = 42162, Fitness = 42162, Ratio = 80.13% of max
+#[Step 3200] New feasible solution found! Value = 42290, Fitness = 42290, Ratio = 80.37% of max
+#[Step 4909] New feasible solution found! Value = 42333, Fitness = 42333, Ratio = 80.45% of max
+#[Step 5983] New feasible solution found! Value = 43091, Fitness = 43091, Ratio = 81.89% of max
+#[Step 10175] New feasible solution found! Value = 44756, Fitness = 44756, Ratio = 85.06% of max
+#[Step 13534] New feasible solution found! Value = 45678, Fitness = 45678, Ratio = 86.81% of max
+#[Step 15483] New feasible solution found! Value = 45739, Fitness = 45739, Ratio = 86.92% of max
+#[Step 17574] New feasible solution found! Value = 46419, Fitness = 46419, Ratio = 88.22% of max
+#[Step 17585] New feasible solution found! Value = 46511, Fitness = 46511, Ratio = 88.39% of max
+#[Step 18313] New feasible solution found! Value = 46600, Fitness = 46600, Ratio = 88.56% of max
+#[Step 18560] New feasible solution found! Value = 46739, Fitness = 46739, Ratio = 88.82% of max
+#[Step 22499] New feasible solution found! Value = 48660, Fitness = 48660, Ratio = 92.47% of max
+#[Step 23796] New feasible solution found! Value = 48842, Fitness = 48842, Ratio = 92.82% of max
+#[Step 24252] New feasible solution found! Value = 49130, Fitness = 49130, Ratio = 93.37% of max
+#[Step 85874] New feasible solution found! Value = 49338, Fitness = 49338, Ratio = 93.76% of max
+#[Step 88389] New feasible solution found! Value = 49433, Fitness = 49433, Ratio = 93.94% of max
+#[Step 90324] New feasible solution found! Value = 49438, Fitness = 49438, Ratio = 93.95% of max
+#[Step 90702] New feasible solution found! Value = 49505, Fitness = 49505, Ratio = 94.08% of max
+#[Step 91211] New feasible solution found! Value = 49615, Fitness = 49615, Ratio = 94.29% of max
+
+#Best feasible solution found:
+#Value = 49615, Penalty = 0, Fitness = 49615
+#Ratio = 94.29% of theoretical maximum value
+
+#Solution array form:
+#[-1  0  6  9  8  8  0  2  9  6  9  6  2  1  3  1  4 -1  5  1  4  4 -1  4
+#  8  9  5  0  8  9  5  7  0  9  1 -1  1  8  3  6 -1  3  4  0 -1  0  7  7
+#  1 -1  6  8  8  4  6 -1  9  4  1  7  1  5  3  3  3  9  5 -1 -1  3  2 -1
+#  3 -1  6  5 -1  6  5  4  9  9 -1  5  3  2 -1  5  2  2  7  8  6  2  7  4
+#  3  4  0 -1]
